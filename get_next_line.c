@@ -28,12 +28,12 @@ static int      return_line(int rd, char ** heap, char **line)
 
     i = 0;
     if(rd < 0)
-        return(GNL_FAILURE);
+        return(-1);
     else if (rd == 0 && *heap[0] == '\0')
     {
         *line = ft_strdup(STR_EMPTY);
         ft_strdel(heap);
-        return(GNL_EOF);
+        return(0);
     }
     while ((*heap)[i] != LBREAK && (*heap)[i] != '\0')
         i++;
@@ -43,10 +43,10 @@ static int      return_line(int rd, char ** heap, char **line)
         tmp = ft_strdup(*heap + i + 1);
         free(*heap);
         *heap = tmp;
-        return (GNL_SUCCESS);
+        return (1);
     }
     ft_strdel(heap);
-    return(GNL_EOF);
+    return(0);
 }
 
 int         get_next_line(int fd, char **line)
@@ -56,15 +56,15 @@ int         get_next_line(int fd, char **line)
     char        *buffer;
     static char *heap[OPEN_MAX];
 
-    if (fd < 0 || !line || BUFFER_SIZE < 1)
-        return (GNL_FAILURE);
+    if ((fd < 0) || !line || BUFFER_SIZE < 1 || (read(fd, NULL, 0) < 0))
+        return (-1);
     if(!(heap[fd]))
     {
         if(!(heap[fd] = ft_strdup(STR_EMPTY)))
-            return (GNL_FAILURE);
+            return (-1);
     }
     if(!(buffer = malloc((BUFFER_SIZE + 1) * sizeof(*buffer))))
-        return (GNL_FAILURE);
+        return (-1);
     while ((rd = read(fd, buffer, BUFFER_SIZE)) > 0)
     {
         buffer[rd] = '\0';
