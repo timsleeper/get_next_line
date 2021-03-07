@@ -17,11 +17,11 @@ static void     ft_strdel(char **str)
         if(*str && str)
         {
             free(*str);
-            *str == NULL;
+            *str = NULL;
         }
 }
 
-static int      return_line(int rd, char ** heap, char ** line)
+static int      return_line(int rd, char ** heap, char **line)
 {
     int     i;
     char    *tmp;
@@ -42,7 +42,7 @@ static int      return_line(int rd, char ** heap, char ** line)
     {
         tmp = ft_strdup(*heap + i + 1);
         free(*heap);
-        (*heap) = tmp;
+        *heap = tmp;
         return (GNL_SUCCESS);
     }
     ft_strdel(heap);
@@ -51,23 +51,23 @@ static int      return_line(int rd, char ** heap, char ** line)
 
 int         get_next_line(int fd, char **line)
 {
-    int         fd;
+    int         rd;
     char        *tmp;
     char        *buffer;
     static char *heap[OPEN_MAX];
 
-    if (fd < 0 || !line || buffer_size < 1)
+    if (fd < 0 || !line || BUFFER_SIZE < 1)
         return (GNL_FAILURE);
     if(!(heap[fd]))
     {
-        if(!(heap[fd] = ftstrdup(STR_EMPTY)))
+        if(!(heap[fd] = ft_strdup(STR_EMPTY)))
             return (GNL_FAILURE);
     }
     if(!(buffer = malloc((BUFFER_SIZE + 1) * sizeof(*buffer))))
         return (GNL_FAILURE);
     while ((rd = read(fd, buffer, BUFFER_SIZE)) > 0)
     {
-        buffer[fd] = '\0';
+        buffer[rd] = '\0';
         tmp = ft_strjoin(heap[fd], buffer);
         ft_strdel(&heap[fd]);
         heap[fd] = tmp;

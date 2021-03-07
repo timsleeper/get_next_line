@@ -79,3 +79,8 @@ char	*ft_strchr(const char *s, int c)
 	else
 		return (ft_strchr(++s, c));
 }
+
+size_t	ft_strlen(const char *s)
+{
+	return (*s ? ft_strlen(++s) + 1 : 0);
+}
